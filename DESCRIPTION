@@ -1,0 +1,22 @@
+Package: swiper
+Title: What the Package Does (One Line, Title Case)
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Atsushi",
+           family = "Yasumoto",
+           role = c("aut", "cph", "cre"),
+           email = "atusy.rpkg@gmail.com",
+           comment = c(ORCID = "0000-0002-8335-495X"))
+Maintainer: Atsushi Yasumoto <atusy.rpkg@gmail.com>
+Description: What the package does (one paragraph).
+License: MIT + file LICENSE
+URL: https://swiper.atusy.net, https://github.com/atusy/swiper
+Encoding: UTF-8
+Language: en-US
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Suggests: 
+    spelling,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
