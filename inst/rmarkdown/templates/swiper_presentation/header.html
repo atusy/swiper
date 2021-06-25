@@ -1,0 +1,65 @@
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/swiper/swiper-bundle.min.css"
+  data-external="1"
+/>
+
+
+<style>
+  body {
+    background: #000;
+    font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+    font-size: 18px;
+    color: #000;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  section.swiper-container {
+    margin: 0;
+    width: 960px;
+    height: 700px;
+    transform-origin: top left;
+    --item-margin-side: calc(var(--swiper-navigation-size) / 44 * 27 + 15px);
+    --item-width: calc(960px - 2 * var(--item-margin-side));
+  }
+  section.swiper-slide {
+    background: #fff
+  }
+  section.swiper-slide > * {
+    width: unset;
+    height: unset;
+    max-width: var(--item-width);
+    margin-left: var(--item-margin-side);
+    margin-right: var(--item-margin-side);
+  }
+  .swiper-slide p img {
+    box-sizing: border-box;
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const container = document.querySelector("section.swiper-container");
+  const slide_width = 960;
+  const slide_height = 700;
+  function resize() {
+    const current_width = window.innerWidth;
+    const current_height = window.innerHeight;
+    const scale_width = current_width / slide_width;
+    const use_scale_width = current_height > slide_height * scale_width;
+    const scale = use_scale_width ? scale_width : current_height / 700;
+    const margin = use_scale_width
+       ? `${current_height * 0.5 - slide_height * scale * 0.5}px 0`
+       : `0 ${current_width * 0.5 - slide_width * scale * 0.5}px`;
+    container.style["transform"] = `scale(${scale})`;
+    container.style["margin"] = margin;
+  }
+  resize();
+  window.addEventListener("resize", resize);
+});
+</script>
