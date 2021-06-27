@@ -19,7 +19,8 @@ swiper_presentation <- function(
     clean_supporting = !self_contained,
     base_format = rmarkdown::html_vignette(
       template = NULL,
-      mathjax = NULL
+      mathjax = NULL,
+      toc = FALSE
     )
   )
 }
