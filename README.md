@@ -7,6 +7,10 @@
 
 [swiperjs](https://swiperjs.com) on R (experimental)
 
+## Demo
+
+https://atusy.github.io/swiper/index.html
+
 ## Installation
 
 ``` r
