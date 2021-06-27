@@ -2,8 +2,18 @@
 swiper_presentation <- function(
   keep_md = FALSE,
   self_contained = FALSE,
+  template = NULL,
   ...
 ) {
+  base_format = rmarkdown::html_document(
+    keep_md = keep_md,
+    self_contained = self_contained,
+    template = template,
+    theme = NULL,
+    mathjax = NULL,
+    toc = FALSE, # Not yet implemented
+    ...
+  )
   rmarkdown::output_format(
     knitr = NULL,
     pandoc = rmarkdown::pandoc_options(
@@ -15,13 +25,9 @@ swiper_presentation <- function(
         "--lua-filter", swiper_file("swiper.lua")
       )
     ),
-    keep_md = keep_md,
-    clean_supporting = !self_contained,
-    base_format = rmarkdown::html_vignette(
-      template = NULL,
-      mathjax = NULL,
-      toc = FALSE
-    )
+    keep_md = base_format$keep_md,
+    clean_supporting = base_format$clean_supporting,
+    base_format = base_format
   )
 }
 
