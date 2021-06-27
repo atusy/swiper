@@ -1,0 +1,91 @@
+<script defer src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<script>
+// initialize
+document.addEventListener("DOMContentLoaded", function() {
+  const json = document.getElementById("swiper-config");
+  let config = {
+    pagination: {
+      el: ".swiper-pagination",
+      type: "fraction",
+    },
+    navigation: {
+      nextEl: ".swiper-button-next",
+      prevEl: ".swiper-button-prev",
+    },
+    keyboard: {
+      enabled: true,
+      onlyInViewport: false
+    }
+  }
+  if (json !== null) {
+    config = Object.assign({}, config, JSON.parse(json.textContent));
+  }
+  const swiper = new Swiper("#swiper-presentation", config);
+});
+
+// resize
+document.addEventListener("DOMContentLoaded", function() {
+  const container = document.getElementById("swiper-presentation");
+  const slide_width = 960;
+  const slide_height = 700;
+  function resize() {
+    const current_width = window.innerWidth;
+    const current_height = window.innerHeight;
+    const scale_width = current_width / slide_width;
+    const use_scale_width = current_height > slide_height * scale_width;
+    const scale = use_scale_width ? scale_width : current_height / 700;
+    const margin = use_scale_width
+       ? `${current_height * 0.5 - slide_height * scale * 0.5}px 0`
+       : `0 ${current_width * 0.5 - slide_width * scale * 0.5}px`;
+    container.style["transform"] = `scale(${scale})`;
+    container.style["margin"] = margin;
+  }
+  resize();
+  window.addEventListener("resize", resize);
+});
+</script>
+
+<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css"/>
+
+<style>
+  body {
+    background: #000;
+    font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+    font-size: 18px;
+    color: #000;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  section.swiper-container {
+    margin: 0;
+    width: 960px;
+    height: 700px;
+    transform-origin: top left;
+    --item-margin-side: calc(var(--swiper-navigation-size) / 44 * 27 + 15px);
+    --item-width: calc(960px - 2 * var(--item-margin-side));
+  }
+  section.swiper-slide {
+    background: #fff
+  }
+  h1.swiper-slide,
+  h2.swiper-slide,
+  h3.swiper-slide,
+  h4.swiper-slide,
+  h5.swiper-slide,
+  h6.swiper-slide {
+    width: auto;
+    height: auto;
+  }
+  section.swiper-slide > * {
+    max-width: var(--item-width);
+    margin: var(--item-margin-side);
+  }
+  .swiper-slide p img {
+    box-sizing: border-box;
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+</style>
