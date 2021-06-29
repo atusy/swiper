@@ -2,26 +2,30 @@
 <script>
 // initialize
 document.addEventListener("DOMContentLoaded", function() {
-  const json = document.getElementById("swiper-config");
-  let config = {
-    simulateTouch: false,
-    pagination: {
-      el: ".swiper-pagination",
-      type: "fraction",
-    },
-    navigation: {
-      nextEl: ".swiper-button-next",
-      prevEl: ".swiper-button-prev",
-    },
-    keyboard: {
-      enabled: true,
-      onlyInViewport: false
+  const containers = document.getElementsByClassName('swiper-container');
+  Array.from(containers).forEach(function(container) {
+    const id = container.id; // `|| swiper-${Math.random().toString().substring(2)}`
+    const json = document.getElementById(`${id}-config`);
+    let config = {
+      simulateTouch: true,
+      pagination: {
+        el: `#${id}-pagination`,
+        type: "fraction",
+      },
+      navigation: {
+        nextEl: `#${id}-button-next`,
+        prevEl: `#${id}-button-prev`,
+      },
+      keyboard: {
+        enabled: true,
+        onlyInViewport: false
+      }
     }
-  }
-  if (json !== null) {
-    config = Object.assign({}, config, JSON.parse(json.textContent));
-  }
-  const swiper = new Swiper("#swiper-presentation", config);
+    if (json !== null) {
+      config = Object.assign({}, config, JSON.parse(json.textContent));
+    }
+    const swiper = new Swiper(container, config);
+  })
 });
 
 // resize
@@ -63,7 +67,7 @@ document.addEventListener("DOMContentLoaded", function() {
     box-sizing: border-box;
   }
 
-  section.swiper-container {
+  #swiper-presentation {
     margin: 0;
     width: 960px;
     height: 700px;
