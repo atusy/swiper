@@ -1,31 +1,79 @@
 <script defer src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 <script>
+// nest slides
+document.addEventListener("DOMContentLoaded", function() {
+  const config_element = document.getElementById('swiper-presentation-level2-config');
+  if (config_element === null) {
+    return;
+  }
+  const config = config_element.innerText;
+  function aside(id, role) {
+    element = document.createElement('aside');
+    element.classList.add(`swiper-${role}`);
+    element.id = `${id}-${role}`
+    return element;
+  }
+  Array.from(document.querySelectorAll("section.level1")).forEach(function(s1) {
+    const s2_nodes = s1.querySelectorAll("section.level2");
+    if(s2_nodes.length == 0) {return};
+
+    const wrapper = document.createElement('section');
+    wrapper.classList.add("swiper-wrapper");
+    const first_slide = wrapper.appendChild(document.createElement('section'));
+    Array.from(s2_nodes).forEach(function(s2) {
+      clone = s2.cloneNode(true)
+      clone.classList.add('swiper-slide');
+      wrapper.appendChild(clone);
+    });
+
+    first_slide.classList.add("swiper-slide");
+    for (const element of s1.children) {
+      if (element.tagName === "SECTION") {
+        break;
+      }
+      first_slide.appendChild(element.cloneNode(true));
+    }
+
+    s1.replaceChildren(...[
+      wrapper,
+      //aside(s1.id, "button-next"),
+      //aside(s1.id, "button-prev"),
+      aside(s1.id, "pagination")
+    ]);
+    s1.setAttribute('data-config', config);
+    s1.classList.add('swiper-container');
+  });
+});
+
+
 // initialize
 document.addEventListener("DOMContentLoaded", function() {
+  const config_element = document.getElementById("swiper-presentation-level1-config");
+  if (config_element) {
+    document.getElementById("swiper-presentation").setAttribute("data-config", config_element.innerText);
+  };
+
   const containers = document.getElementsByClassName('swiper-container');
   Array.from(containers).forEach(function(container) {
     const id = container.id; // `|| swiper-${Math.random().toString().substring(2)}`
-    const json = document.getElementById(`${id}-config`);
     let config = {
-      simulateTouch: true,
+      simulateTouch: false,
       pagination: {
         el: `#${id}-pagination`,
-        type: "fraction",
+        clickable: true,
+        //type: "fraction",
       },
       navigation: {
         nextEl: `#${id}-button-next`,
         prevEl: `#${id}-button-prev`,
-      },
-      keyboard: {
-        enabled: true,
-        onlyInViewport: false
       }
     }
+    const json = container.getAttribute('data-config');
     if (json !== null) {
-      config = Object.assign({}, config, JSON.parse(json.textContent));
+      config = Object.assign({}, config, JSON.parse(json));
     }
     const swiper = new Swiper(container, config);
-  })
+  });
 });
 
 // resize
@@ -78,6 +126,9 @@ document.addEventListener("DOMContentLoaded", function() {
   section.swiper-slide {
     background: #fff
   }
+  h1 {
+    font-size: 1.5em;
+  }
   h1.swiper-slide,
   h2.swiper-slide,
   h3.swiper-slide,
@@ -96,5 +147,14 @@ document.addEventListener("DOMContentLoaded", function() {
     max-width: 100%;
     margin-left: 0;
     margin-right: 0;
+  }
+
+  .swiper-slide.swiper-container > * {
+    margin: 0;
+  }
+  .swiper-slide.swiper-container .swiper-wrapper {
+    max-width: unset;
+    width: 100%;
+    height: 100%;
   }
 </style>
