@@ -213,28 +213,80 @@
   <![endif]-->
   <script defer src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
   <script>
+  // nest slides
+  document.addEventListener("DOMContentLoaded", function() {
+    const config_element = document.getElementById('swiper-presentation-level2-config');
+    if (config_element === null) {
+      return;
+    }
+    const config = config_element.innerText;
+    function aside(id, role) {
+      element = document.createElement('aside');
+      element.classList.add(`swiper-${role}`);
+      element.id = `${id}-${role}`
+      return element;
+    }
+    Array.from(document.querySelectorAll("section.level1")).forEach(function(s1) {
+      const s2_nodes = s1.querySelectorAll("section.level2");
+      if(s2_nodes.length == 0) {return};
+
+      const wrapper = document.createElement('section');
+      wrapper.classList.add("swiper-wrapper");
+      const first_slide = wrapper.appendChild(document.createElement('section'));
+      Array.from(s2_nodes).forEach(function(s2) {
+        clone = s2.cloneNode(true)
+        clone.classList.add('swiper-slide');
+        wrapper.appendChild(clone);
+      });
+
+      first_slide.classList.add("swiper-slide");
+      for (const element of s1.children) {
+        if (element.tagName === "SECTION") {
+          break;
+        }
+        first_slide.appendChild(element.cloneNode(true));
+      }
+
+      s1.replaceChildren(...[
+        wrapper,
+        //aside(s1.id, "button-next"),
+        //aside(s1.id, "button-prev"),
+        aside(s1.id, "pagination")
+      ]);
+      s1.setAttribute('data-config', config);
+      s1.classList.add('swiper-container');
+    });
+  });
+
+
   // initialize
   document.addEventListener("DOMContentLoaded", function() {
-    const json = document.getElementById("swiper-config");
-    let config = {
-      simulateTouch: false,
-      pagination: {
-        el: ".swiper-pagination",
-        type: "fraction",
-      },
-      navigation: {
-        nextEl: ".swiper-button-next",
-        prevEl: ".swiper-button-prev",
-      },
-      keyboard: {
-        enabled: true,
-        onlyInViewport: false
+    const config_element = document.getElementById("swiper-presentation-level1-config");
+    if (config_element) {
+      document.getElementById("swiper-presentation").setAttribute("data-config", config_element.innerText);
+    };
+
+    const containers = document.getElementsByClassName('swiper-container');
+    Array.from(containers).forEach(function(container) {
+      const id = container.id; // `|| swiper-${Math.random().toString().substring(2)}`
+      let config = {
+        simulateTouch: false,
+        pagination: {
+          el: `#${id}-pagination`,
+          clickable: true,
+          //type: "fraction",
+        },
+        navigation: {
+          nextEl: `#${id}-button-next`,
+          prevEl: `#${id}-button-prev`,
+        }
       }
-    }
-    if (json !== null) {
-      config = Object.assign({}, config, JSON.parse(json.textContent));
-    }
-    const swiper = new Swiper("#swiper-presentation", config);
+      const json = container.getAttribute('data-config');
+      if (json !== null) {
+        config = Object.assign({}, config, JSON.parse(json));
+      }
+      const swiper = new Swiper(container, config);
+    });
   });
 
   // resize
@@ -276,7 +328,7 @@
       box-sizing: border-box;
     }
 
-    section.swiper-container {
+    #swiper-presentation {
       margin: 0;
       width: 960px;
       height: 700px;
@@ -286,6 +338,9 @@
     }
     section.swiper-slide {
       background: #fff
+    }
+    h1 {
+      font-size: 1.5em;
     }
     h1.swiper-slide,
     h2.swiper-slide,
@@ -306,20 +361,29 @@
       margin-left: 0;
       margin-right: 0;
     }
+
+    .swiper-slide.swiper-container > * {
+      margin: 0;
+    }
+    .swiper-slide.swiper-container .swiper-wrapper {
+      max-width: unset;
+      width: 100%;
+      height: 100%;
+    }
   </style>
-  <script src="index_files/header-attrs-2.7/header-attrs.js"></script>
+  <script src="index_files/header-attrs-2.9/header-attrs.js"></script>
 </head>
 <body>
 <section class="swiper-container" id="swiper-presentation">
 <section class="swiper-wrapper">
-<section class="level1 swiper-slide title">
-<h1 class="swiper-slide title">swiper demo</h1>
+<section class="level1 swiper-slide title" data-number="1">
+<h1 class="swiper-slide title" data-number="1">swiper demo</h1>
 <div class="author">
 <p>Atusy</p>
 </div>
 </section>
-<section id="slide-1" class="level1 swiper-slide">
-<h1 class="swiper-slide">Slide 1</h1>
+<section id="slide-1" class="level1 swiper-slide" data-number="2">
+<h1 class="swiper-slide" data-number="2">Slide 1</h1>
 <p>source</p>
 <div style="overflow: scroll; height: 400px">
 <pre><code>---
@@ -335,31 +399,31 @@ source
 
 ::: {style=&quot;overflow: scroll; height: 400px&quot;}
 
-    `r paste(readLines(&quot;example.Rmd&quot;), collapse = &quot;\n    &quot;)`
+    `r paste(readLines(&quot;index.Rmd&quot;), collapse = &quot;\n    &quot;)`
 
 :::
 
-# Slide 2
+# Slide 2-1
 
 ```{r}
 head(mtcars)
 ```
 
-# Slide 3
+## Slide 2-2
 
 ```{r, fig.width=5, fig.height=5}
 plot(mtcars)
 ```
 
-# Slide 4
+## Slide 2-3
 
 ```{r}
 lm(mpg ~ ., mtcars)
 ```</code></pre>
 </div>
 </section>
-<section id="slide-2" class="level1 swiper-slide">
-<h1 class="swiper-slide">Slide 2</h1>
+<section id="slide-2-1" class="level1 swiper-slide" data-number="3">
+<h1 class="swiper-slide" data-number="3">Slide 2-1</h1>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(mtcars)</span></code></pre></div>
 <pre><code>##                    mpg cyl disp  hp drat    wt  qsec vs am gear carb
 ## Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
@@ -368,14 +432,13 @@ lm(mpg ~ ., mtcars)
 ## Hornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
 ## Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
 ## Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1</code></pre>
-</section>
-<section id="slide-3" class="level1 swiper-slide">
-<h1 class="swiper-slide">Slide 3</h1>
+<section id="slide-2-2" class="level2" data-number="3.1">
+<h2 data-number="3.1">Slide 2-2</h2>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mtcars)</span></code></pre></div>
 <p><img src="index_files/figure-html5/unnamed-chunk-2-1.png" width="480" /></p>
 </section>
-<section id="slide-4" class="level1 swiper-slide">
-<h1 class="swiper-slide">Slide 4</h1>
+<section id="slide-2-3" class="level2" data-number="3.2">
+<h2 data-number="3.2">Slide 2-3</h2>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(mpg <span class="sc">~</span> ., mtcars)</span></code></pre></div>
 <pre><code>## 
 ## Call:
@@ -388,9 +451,14 @@ lm(mpg ~ ., mtcars)
 ##     0.82104      0.31776      2.52023      0.65541     -0.19942</code></pre>
 </section>
 </section>
-<aside class="swiper-button-next"></aside>
-<aside class="swiper-button-prev"></aside>
-<aside class="swiper-pagination"></aside>
+<script type="application/json" id="swiper-presentation-level1-config" aria-hidden="true">{"keyboard":{"enabled":true,"onlyInViewport":false},"direction":"horizontal"}</script>
+<script type="application/json" id="swiper-presentation-level2-config" aria-hidden="true">{"keyboard":{"enabled":true,"onlyInViewport":false},"direction":"vertical"}</script>
+</section>
+<!--
+<aside class="swiper-button-next" id="swiper-presentation-button-next"></aside>
+<aside class="swiper-button-prev" id="swiper-presentation-button-prev"></aside>
+-->
+<aside class="swiper-pagination" id="swiper-presentation-pagination"></aside>
 </section>
 </body>
 </html>
