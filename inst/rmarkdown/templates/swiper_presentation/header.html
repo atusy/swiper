@@ -1,6 +1,12 @@
 <script defer src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 <script>
+// nest slides
 document.addEventListener("DOMContentLoaded", function() {
+  const config_element = document.getElementById('swiper-presentation-level2-config');
+  if (config_element === null) {
+    return;
+  }
+  const config = config_element.innerText;
   function aside(id, role) {
     element = document.createElement('aside');
     element.classList.add(`swiper-${role}`);
@@ -34,7 +40,7 @@ document.addEventListener("DOMContentLoaded", function() {
       //aside(s1.id, "button-prev"),
       aside(s1.id, "pagination")
     ]);
-    s1.setAttribute('data-config', '{"direction":"vertical"}');
+    s1.setAttribute('data-config', config);
     s1.classList.add('swiper-container');
   });
 });
@@ -42,6 +48,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
 // initialize
 document.addEventListener("DOMContentLoaded", function() {
+  const config_element = document.getElementById("swiper-presentation-level1-config");
+  if (config_element) {
+    document.getElementById("swiper-presentation").setAttribute("data-config", config_element.innerText);
+  };
+
   const containers = document.getElementsByClassName('swiper-container');
   Array.from(containers).forEach(function(container) {
     const id = container.id; // `|| swiper-${Math.random().toString().substring(2)}`
@@ -53,14 +64,8 @@ document.addEventListener("DOMContentLoaded", function() {
         //type: "fraction",
       },
       navigation: {
-        nextEl: null,
-        prevEl: null
-        //nextEl: `#${id}-button-next`,
-        //prevEl: `#${id}-button-prev`,
-      },
-      keyboard: {
-        enabled: true,
-        onlyInViewport: false
+        nextEl: `#${id}-button-next`,
+        prevEl: `#${id}-button-prev`,
       }
     }
     const json = container.getAttribute('data-config');
@@ -68,7 +73,7 @@ document.addEventListener("DOMContentLoaded", function() {
       config = Object.assign({}, config, JSON.parse(json));
     }
     const swiper = new Swiper(container, config);
-  })
+  });
 });
 
 // resize

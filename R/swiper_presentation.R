@@ -1,5 +1,6 @@
 #' @export
 swiper_presentation <- function(
+  slide_level = 2L,
   keep_md = FALSE,
   self_contained = FALSE,
   template = NULL,
